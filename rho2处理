@@ -1,0 +1,32 @@
+# 读取文件，将数字存储为二维列表A和B
+with open("2G4rho.txt") as f:
+    lines = f.readlines()
+    A = [[float(lines[4*i+j]) for j in range(4)] for i in range(4)]
+
+with open("2G9rho.txt") as f:
+    lines = f.readlines()
+    B = [[float(lines[4*i+j]) for j in range(4)] for i in range(4)]
+
+# 初始化p和n
+p1=0.1
+p2=0.2
+p3=0.3
+p4=0.4
+p = [p1, p2, p3, p4]
+n = 3
+
+# 计算G_q
+G_q = [[0 for _ in range(4)] for _ in range(4)]
+for i in range(4):
+    for j in range(4):
+        if i != j:
+            T = 0.5 * (B[i][j] - A[i][j] - 1)
+            G_q[i][j] = p[i] * p[j] * (T + 2**n - 2)
+        else:
+            G_q[i][j] = p[i] * p[j] * 2**n
+
+# 计算总的G_q
+total_G_q = sum(sum(G_q[i]) for i in range(4))
+tr=(total_G_q-4)/4
+
+print(tr)

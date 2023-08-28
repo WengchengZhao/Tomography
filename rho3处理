@@ -1,0 +1,42 @@
+# 读取3G9rho.txt文件中的数据，存储在A张量中
+with open("3G9rho.txt") as f:
+    lines = f.readlines()
+    A = [[[float(lines[i*16+j*4+k]) for k in range(4)] for j in range(4)] for i in range(4)]
+
+# 读取3G16rho.txt文件中的数据，存储在B张量中
+with open("3G16rho.txt") as f:
+    lines = f.readlines()
+    B = [[[float(lines[i*16+j*4+k]) for k in range(4)] for j in range(4)] for i in range(4)]
+
+# 初始化p和n
+p1=0.1
+p2=0.2
+p3=0.3
+p4=0.4
+p = [p1, p2, p3, p4]
+n = 3
+num=0
+tr3=0
+# 初始化T和G_q张量
+T = [[[0 for _ in range(4)] for _ in range(4)] for _ in range(4)]
+G_q = [[[0 for _ in range(4)] for _ in range(4)] for _ in range(4)]
+
+# 计算T张量和G_q张量
+for i in range(4):
+    for j in range(4):
+        for k in range(4):
+            if i != j and i != k and j != k:
+                T[i][j][k] = 0.5 * (B[i][j][k] - A[i][j][k] -1)
+                G_q[i][j][k] = p[i] * p[j] * p[k] * (T[i][j][k] + 2**n - 3)
+            else:
+                print(i,j,k)
+                num+=1
+                G_q[i][j][k] = p[i] * p[j] * p[k] * 6 
+                print(G_q[i][j][k])
+
+# 计算总的G_q
+total_G_q = sum(sum(sum(G_q[i][j]) for j in range(4)) for i in range(4))
+tr3=0.25+1.5*0.6498793582398816-0.125*total_G_q
+print('total_G_q',total_G_q)
+print('tr3',tr3)
+#print(num)

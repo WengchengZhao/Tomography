@@ -1,0 +1,298 @@
+from mindquantum.core.circuit import Circuit
+from mindquantum.core.circuit import UN
+from mindquantum.simulator import Simulator
+import random 
+import numpy as np   
+import math                          # 导入numpy库并简写为np
+from mindquantum.simulator import Simulator    # 从mindquantum.simulator中导入Simulator类
+from mindquantum.core.gates import X,Y,Z, H, RY,Measure,I
+from mindquantum import *
+from mindquantum.core.operators import Hamiltonian    # 引入哈密顿量定义模块
+from mindquantum.core.operators import QubitOperator 
+from mindquantum import Circuit, X
+from mindquantum.core.gates import DepolarizingChannel, X
+from mindquantum.core.circuit import Circuit
+
+G_mat=np.array([[-1,0],[0,1]])
+G_Gate=UnivMathGate('G',G_mat)
+G=G_Gate
+
+G1_mat=np.array([[np.cos((0.2)*math.pi)+1j*np.sin((0.2)*math.pi),0],
+                     [0,1]])
+G1_Gate=UnivMathGate('G1',G1_mat)
+G1=G1_Gate
+
+G11_mat=np.array([[np.cos(-(0.2)*math.pi)+1j*np.sin(-(0.2)*math.pi),0],
+                     [0,1]])
+G11_Gate=UnivMathGate('G11',G11_mat)
+G11=G11_Gate
+
+
+theta1=0.29*math.pi
+phi1=0.07*math.pi
+lam1=0.11*math.pi
+
+theta2=0.46*math.pi
+phi2=0.62*math.pi
+lam2=0.82*math.pi
+
+theta3=0.41*math.pi
+phi3=0.59*math.pi
+lam3=0.53*math.pi
+
+theta4=0.55*math.pi
+phi4=0.31*math.pi
+lam4=0.6*math.pi
+
+
+U1_mat=np.array([[np.cos(0.5*theta1),-1*np.exp(1j*lam1)*np.sin(0.5*theta1)],
+                 [np.exp(1j*phi1)*np.sin(0.5*theta1),np.exp(1j*lam1+1j*phi1)*np.cos(0.5*theta1)]])
+U1_Gate=UnivMathGate('U1',U1_mat)
+U1=U1_Gate
+
+U1d_mat=np.array([[np.cos(0.5*theta1),np.exp(-1j*phi1)*np.sin(0.5*theta1)],
+                  [-1*np.exp(-1j*lam1)*np.sin(0.5*theta1),np.exp(-1j*lam1-1j*phi1)*np.cos(0.5*theta1)]])
+U1d_Gate=UnivMathGate('U1d',U1d_mat)
+U1d=U1d_Gate
+
+#-------------------------------------------------------------------------------------------
+
+
+U2_mat=np.array([[np.cos(0.5*theta2),-1*np.exp(1j*lam2)*np.sin(0.5*theta2)],
+                 [np.exp(1j*phi2)*np.sin(0.5*theta2),np.exp(1j*lam2+1j*phi2)*np.cos(0.5*theta2)]])
+U2_Gate=UnivMathGate('U2',U2_mat)
+U2=U2_Gate
+
+U2d_mat=np.array([[np.cos(0.5*theta2),np.exp(-1j*phi2)*np.sin(0.5*theta2)],
+                  [-1*np.exp(-1j*lam2)*np.sin(0.5*theta2),np.exp(-1j*lam2-1j*phi2)*np.cos(0.5*theta2)]])
+U2d_Gate=UnivMathGate('U2d',U2d_mat)
+U2d=U2d_Gate
+
+#-------------------------------------------------------------------------------------------
+
+
+U3_mat=np.array([[np.cos(0.5*theta3),-1*np.exp(1j*lam3)*np.sin(0.5*theta3)],
+                 [np.exp(1j*phi3)*np.sin(0.5*theta3),np.exp(1j*lam3+1j*phi3)*np.cos(0.5*theta3)]])
+U3_Gate=UnivMathGate('U3',U3_mat)
+U3=U3_Gate
+
+U3d_mat=np.array([[np.cos(0.5*theta3),np.exp(-1j*phi3)*np.sin(0.5*theta3)],
+                  [-1*np.exp(-1j*lam3)*np.sin(0.5*theta3),np.exp(-1j*lam3-1j*phi3)*np.cos(0.5*theta3)]])
+U3d_Gate=UnivMathGate('U3d',U3d_mat)
+U3d=U3d_Gate
+
+#-------------------------------------------------------------------------------------------
+
+U4_mat=np.array([[np.cos(0.5*theta4),-1*np.exp(1j*lam4)*np.sin(0.5*theta4)],
+                 [np.exp(1j*phi4)*np.sin(0.5*theta4),np.exp(1j*lam4+1j*phi4)*np.cos(0.5*theta4)]])
+U4_Gate=UnivMathGate('U4',U4_mat)
+U4=U4_Gate
+
+U4d_mat=np.array([[np.cos(0.5*theta4),np.exp(-1j*phi4)*np.sin(0.5*theta4)],
+                  [-1*np.exp(-1j*lam4)*np.sin(0.5*theta4),np.exp(-1j*lam4-1j*phi4)*np.cos(0.5*theta4)]])
+U4d_Gate=UnivMathGate('U4d',U4d_mat)
+U4d=U4d_Gate
+
+n_qubits=3
+random_Ui=[U1,U2,U3,U4]
+random_Uj=[U1,U2,U3,U4]
+random_Ui_d=[U1d,U2d,U3d,U4d]
+random_Uj_d=[U1d,U2d,U3d,U4d]
+def rho_0(i):
+   
+    circuit0 = Circuit()
+    circuit0 += UN(random_Ui[i],n_qubits)#rho_0
+    return circuit0
+def rho_0_d(i):
+   
+    circuit00 = Circuit()
+    circuit00 += UN(random_Ui_d[i],n_qubits)#rho_0
+    return circuit00
+def rho_1(j):
+    
+    circuit1 = Circuit()
+    circuit1 += UN(random_Uj[j],n_qubits)#rho_1
+    return circuit1
+def rho_1_d(j):
+    
+    circuit11 = Circuit()
+    circuit11 += UN(random_Uj_d[j],n_qubits)#rho_1
+    return circuit11
+def rho_2(i,j):
+    
+    circuit2 = Circuit()
+    circuit2 += UN(random_Ui[i],n_qubits)
+    circuit2 += UN(random_Uj_d[j],n_qubits)
+    circuit2 +=G.on(2)
+    circuit2 +=G.on(2,0)
+    circuit2 +=G.on(2,1)
+    circuit2 +=G.on(2,[1,0])
+    circuit2 += UN(random_Uj[j],n_qubits)
+    
+    return circuit2
+def rho_2_d(i,j):
+    
+    circuit22 = Circuit()
+    circuit22 += UN(random_Ui_d[i],n_qubits)
+    circuit22 += UN(random_Uj[j],n_qubits)
+    circuit22 += G.on(2)
+    circuit22 += G.on(2,0)
+    circuit22 += G.on(2,1)
+    circuit22 += G.on(2,[1,0])
+    
+    circuit22 += UN(random_Uj_d[j],n_qubits)
+    return circuit22
+def rho_3(i,j):
+    
+    circuit3 = Circuit()
+    circuit3 += UN(random_Uj[j],n_qubits)
+    circuit3 += UN(random_Ui_d[i],n_qubits)
+    circuit3 += G11.on(2)
+    circuit3 += G1.on(2,0)
+    circuit3 += G1.on(2,1)
+    circuit3 += G11.on(2,[1,0])
+    circuit3 += UN(random_Ui[i],n_qubits)
+    
+    return circuit3
+def rho_3_d(i,j):
+    
+    circuit33 = Circuit()
+    circuit33 += UN(random_Uj_d[j],n_qubits)
+    circuit33 += UN(random_Ui[i],n_qubits)
+    circuit33 += G11.on(2,[1,0])
+    circuit33 += G1.on(2,1)
+    circuit33 += G1.on(2,0)
+    circuit33 += G11.on(2)  
+    circuit33 += UN(random_Ui_d[i],n_qubits)
+    
+    
+    return circuit33
+def g_ig_j(i,j):
+    
+    circuitg = Circuit()
+    circuitg += UN(random_Ui_d[i],n_qubits)
+    circuitg +=G.on(2)
+    circuitg +=G.on(2,0)
+    circuitg +=G.on(2,1)
+    circuitg +=G.on(2,[1,0])
+    circuitg += UN(random_Ui[i],n_qubits)#Gi
+            
+    circuitg += UN(random_Uj_d[j],n_qubits)
+    circuitg +=G.on(2)
+    circuitg +=G.on(2,0)
+    circuitg +=G.on(2,1)
+    circuitg +=G.on(2,[1,0])
+    circuitg += UN(random_Uj[j],n_qubits)#Gj
+    
+    return circuitg
+qiyi=0
+zg=0
+sum=0
+nub=0
+traces=[]   
+for i in range (0,4):
+    for j in range (0,4):
+        
+            a=i
+            b=j
+            
+            rho_all = [rho_0(a),rho_1(b),rho_2(a,b),rho_3(a,b)]
+            rho_all_d = [rho_0_d(a),rho_1_d(b),rho_2_d(a,b),rho_3_d(a,b)]
+            
+            #bbbbb=[]
+            ptm_array=np.zeros([4,4])
+            g_array=np.zeros([4,4])
+            
+        
+            for m in range (0,4):
+                for n in range (0,4):
+                    G_0=[j,i]
+                    rho_0ij=[m,n]
+                    
+                    #
+                    
+                    circuit = Circuit()
+                    
+                    circuit += rho_all[n]
+                    circuit += g_ig_j(a,b)
+                    circuit += rho_all_d[m]
+                     
+                    
+                    encoder = Circuit()
+                    encoder += UN(I,n_qubits)
+                    encoder += rho_all[n]
+                    encoder += rho_all_d[m]
+  
+                    sim = Simulator('projectq',n_qubits)   #声明一个3比特的projectq模拟器sim
+                    sim         #展示模拟器状态  
+                    sim.apply_circuit(circuit)
+                     
+    
+                    sim1 = Simulator('projectq', n_qubits)  #声明一个3比特的projectq模拟器sim1
+                    sim1
+                    sim1.apply_circuit(encoder)
+                    
+                    
+                    
+                    ptm_array[m,n]=(sim.get_qs()[0])*(sim.get_qs()[0]).conjugate()
+                    
+                    g_array[m,n]=(sim1.get_qs()[0])*(sim1.get_qs()[0]).conjugate()
+                            #bbbbb.append(res)
+                    nub = nub + 1
+                            
+                    # 计算行列式
+                    det = np.linalg.det(g_array)
+
+                    # 判断是否是奇异矩阵
+                    
+
+                    #result1=sim1.get_qs(True)
+                    
+                    #result1 =sim1.sampling(encoder,shots=1000)
+                    #try:
+                        #res1=result1.data['000']
+                    #except KeyError:
+                        #res1=0
+            print("i=",i,"j=",j)
+                    #print('rho_0ij=',rho_0ij)
+            #print(circuit)
+            #display("PTM矩阵为",ptm_array)
+            if det == 0:
+                    
+                print("g矩阵是奇异矩阵")
+                #display("奇异矩阵为",g_array)
+                trace = 0
+                print("PTM矩阵的迹为",trace)
+                qiyi=qiyi+1
+                print("奇异的个数是：",qiyi)
+            else:
+                #display("g矩阵为",g_array)
+                #print("g矩阵不是奇异矩阵")
+        
+                g_array_inv=np.linalg.inv(g_array)
+                #display("g的逆矩阵为",g_array_inv)
+                                        # 计算矩阵乘积    
+                times=np.dot(g_array_inv,ptm_array)
+                a,b = np.linalg.eig(times)
+                #print(a)
+                #display("乘积为",times)
+                                            # 计算矩阵的迹
+                trace = np.trace(times)
+               
+                print("乘积矩阵的迹为",trace)
+                sum+=trace
+                print("sum",sum)   
+            zg=zg+1
+            print("总共的个数是：",zg)
+                #
+                #
+                # 将结果写入到文件中
+
+                             
+            traces.append(trace)
+with open('2G4rho.txt', 'w') as f:
+    for loop in range (0,16):
+            #print(traces[loop])
+        f.write(str(traces[loop]) + '\n')
+
+                

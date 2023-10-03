@@ -1,0 +1,561 @@
+from mindquantum.core.circuit import Circuit
+from mindquantum.core.circuit import UN
+from mindquantum.simulator import Simulator
+import random 
+import numpy as np   
+import math                       
+from mindquantum.simulator import Simulator   
+from mindquantum.core.gates import X,Y,Z, H, RY,Measure,I
+from mindquantum import *
+from mindquantum.core.operators import Hamiltonian    
+from mindquantum.core.operators import QubitOperator 
+from mindquantum.core.gates.channel import PauliChannel, BitFlipChannel, PhaseFlipChannel, BitPhaseFlipChannel, DepolarizingChannel
+from mindquantum import Circuit, X
+from mindquantum.core.gates import DepolarizingChannel, X
+from mindquantum.core.circuit import Circuit
+
+G_mat=np.array([[-1,0],[0,1]])
+G_Gate=UnivMathGate('G',G_mat)
+G=G_Gate
+
+
+
+G1_mat=np.array([[np.cos((0.2)*math.pi)+1j*np.sin((0.2)*math.pi),0],
+                     [0,1]])
+G1_Gate=UnivMathGate('G1',G1_mat)
+G1=G1_Gate
+
+G11_mat=np.array([[np.cos(-(0.2)*math.pi)+1j*np.sin(-(0.2)*math.pi),0],
+                     [0,1]])
+G11_Gate=UnivMathGate('G11',G11_mat)
+G11=G11_Gate
+
+G2_mat=np.array([[np.cos((0.3)*math.pi)+1j*np.sin((0.3)*math.pi),0],
+                     [0,1]])
+G2_Gate=UnivMathGate('G2',G2_mat)
+G2=G2_Gate
+
+G22_mat=np.array([[np.cos(-(0.3)*math.pi)+1j*np.sin(-(0.3)*math.pi),0],
+                     [0,1]])
+G22_Gate=UnivMathGate('G22',G22_mat)
+G22=G22_Gate
+
+G3_mat=np.array([[np.cos((0.4)*math.pi)+1j*np.sin((0.4)*math.pi),0],
+                     [0,1]])
+G3_Gate=UnivMathGate('G3',G3_mat)
+G3=G3_Gate
+
+G33_mat=np.array([[np.cos(-(0.4)*math.pi)+1j*np.sin(-(0.4)*math.pi),0],
+                     [0,1]])
+G33_Gate=UnivMathGate('G33',G33_mat)
+G33=G33_Gate
+
+theta1=0.29*math.pi
+phi1=0.07*math.pi
+lam1=0.11*math.pi
+
+theta2=0.46*math.pi
+phi2=0.62*math.pi
+lam2=0.82*math.pi
+
+theta3=0.41*math.pi
+phi3=0.59*math.pi
+lam3=0.53*math.pi
+
+theta4=0.55*math.pi
+phi4=0.31*math.pi
+lam4=0.6*math.pi
+
+
+U1_mat=np.array([[np.cos(0.5*theta1),-1*np.exp(1j*lam1)*np.sin(0.5*theta1)],
+                 [np.exp(1j*phi1)*np.sin(0.5*theta1),np.exp(1j*lam1+1j*phi1)*np.cos(0.5*theta1)]])
+U1_Gate=UnivMathGate('U1',U1_mat)
+U1=U1_Gate
+
+U1d_mat=np.array([[np.cos(0.5*theta1),np.exp(-1j*phi1)*np.sin(0.5*theta1)],
+                  [-1*np.exp(-1j*lam1)*np.sin(0.5*theta1),np.exp(-1j*lam1-1j*phi1)*np.cos(0.5*theta1)]])
+U1d_Gate=UnivMathGate('U1d',U1d_mat)
+U1d=U1d_Gate
+
+#-------------------------------------------------------------------------------------------
+
+
+U2_mat=np.array([[np.cos(0.5*theta2),-1*np.exp(1j*lam2)*np.sin(0.5*theta2)],
+                 [np.exp(1j*phi2)*np.sin(0.5*theta2),np.exp(1j*lam2+1j*phi2)*np.cos(0.5*theta2)]])
+U2_Gate=UnivMathGate('U2',U2_mat)
+U2=U2_Gate
+
+U2d_mat=np.array([[np.cos(0.5*theta2),np.exp(-1j*phi2)*np.sin(0.5*theta2)],
+                  [-1*np.exp(-1j*lam2)*np.sin(0.5*theta2),np.exp(-1j*lam2-1j*phi2)*np.cos(0.5*theta2)]])
+U2d_Gate=UnivMathGate('U2d',U2d_mat)
+U2d=U2d_Gate
+
+#-------------------------------------------------------------------------------------------
+
+
+U3_mat=np.array([[np.cos(0.5*theta3),-1*np.exp(1j*lam3)*np.sin(0.5*theta3)],
+                 [np.exp(1j*phi3)*np.sin(0.5*theta3),np.exp(1j*lam3+1j*phi3)*np.cos(0.5*theta3)]])
+U3_Gate=UnivMathGate('U3',U3_mat)
+U3=U3_Gate
+
+U3d_mat=np.array([[np.cos(0.5*theta3),np.exp(-1j*phi3)*np.sin(0.5*theta3)],
+                  [-1*np.exp(-1j*lam3)*np.sin(0.5*theta3),np.exp(-1j*lam3-1j*phi3)*np.cos(0.5*theta3)]])
+U3d_Gate=UnivMathGate('U3d',U3d_mat)
+U3d=U3d_Gate
+
+#-------------------------------------------------------------------------------------------
+
+U4_mat=np.array([[np.cos(0.5*theta4),-1*np.exp(1j*lam4)*np.sin(0.5*theta4)],
+                 [np.exp(1j*phi4)*np.sin(0.5*theta4),np.exp(1j*lam4+1j*phi4)*np.cos(0.5*theta4)]])
+U4_Gate=UnivMathGate('U4',U4_mat)
+U4=U4_Gate
+
+U4d_mat=np.array([[np.cos(0.5*theta4),np.exp(-1j*phi4)*np.sin(0.5*theta4)],
+                  [-1*np.exp(-1j*lam4)*np.sin(0.5*theta4),np.exp(-1j*lam4-1j*phi4)*np.cos(0.5*theta4)]])
+U4d_Gate=UnivMathGate('U4d',U4d_mat)
+U4d=U4d_Gate
+
+
+
+
+random_Ui=[U1,U2,U3,U4]
+random_Uj=[U1,U2,U3,U4]
+random_Uk=[U1,U2,U3,U4]
+random_Ul=[U1,U2,U3,U4]
+random_Ui_d=[U1d,U2d,U3d,U4d]
+random_Uj_d=[U1d,U2d,U3d,U4d]
+random_Uk_d=[U1d,U2d,U3d,U4d]
+random_Ul_d=[U1d,U2d,U3d,U4d]
+
+
+
+ 
+n_qubits=3
+
+def rho_0(i):
+    circuit0 = Circuit()
+    circuit0 += UN(random_Ui[i],n_qubits)
+    return circuit0
+def rho_0_d(i):
+   
+    circuit00 = Circuit()
+    circuit00 += UN(random_Ui_d[i],n_qubits)
+    return circuit00
+def rho_1(j):
+    circuit1 = Circuit()
+    circuit1 += UN(random_Uj[j],n_qubits)
+    return circuit1
+def rho_1_d(j):
+   
+    circuit11 = Circuit()
+    circuit11 += UN(random_Uj_d[j],n_qubits)
+    return circuit11
+
+def rho_2(k):
+    circuit2 = Circuit()
+    circuit2 += UN(random_Uk[k],n_qubits)
+    return circuit2
+def rho_2_d(k):
+    circuit22 = Circuit()
+    circuit22 += UN(random_Uk_d[k],n_qubits)
+    return circuit22
+
+def rho_3(l):
+    circuit3 =Circuit()
+    circuit3 += UN(random_Ul[l],n_qubits)
+    return circuit3
+def rho_3_d(l):
+    circuit33 =Circuit()
+    circuit33 += UN(random_Ul_d[l],n_qubits)
+    return circuit33
+
+def rho_4(i,j):
+    circuit4 = Circuit()
+    circuit4 += UN(random_Uj[j],n_qubits)
+    circuit4 += UN(random_Ui_d[i],n_qubits)
+    circuit4 +=G.on(2)
+    circuit4 +=G.on(2,0)
+    circuit4 +=G.on(2,1)
+    circuit4 +=G.on(2,[1,0])
+    circuit4 += UN(random_Ui[i],n_qubits)
+    return circuit4
+def rho_4_d(i,j):
+    circuit44 = Circuit()
+    circuit44 += UN(random_Ui_d[i],n_qubits)
+    circuit44 += G.on(2)
+    circuit44 += G.on(2,0)
+    circuit44 += G.on(2,1)
+    circuit44 += G.on(2,[1,0])
+    circuit44 += UN(random_Ui[i],n_qubits)
+    circuit44 += UN(random_Uj_d[j],n_qubits)
+    return circuit44
+    
+def rho_5(i,k):
+    circuit5 = Circuit()
+    circuit5 += UN(random_Uk[k],n_qubits)
+    circuit5 += UN(random_Ui_d[i],n_qubits)
+    circuit5 +=G.on(2)
+    circuit5 +=G.on(2,0)
+    circuit5 +=G.on(2,1)
+    circuit5 +=G.on(2,[1,0])
+    circuit5 += UN(random_Ui[i],n_qubits) 
+    return circuit5
+def rho_5_d(i,k):
+    circuit55 = Circuit()
+    circuit55 += UN(random_Ui_d[i],n_qubits)
+    circuit55 += G.on(2)
+    circuit55 += G.on(2,0)
+    circuit55 += G.on(2,1)
+    circuit55 += G.on(2,[1,0])
+    circuit55 += UN(random_Ui[i],n_qubits)
+    circuit55 += UN(random_Uk_d[k],n_qubits)
+    return circuit55
+
+def rho_6(i,l):
+    circuit6 = Circuit()
+    circuit6 += UN(random_Ul[l],n_qubits)
+    circuit6 += UN(random_Ui_d[i],n_qubits)
+    circuit6 +=G.on(2)
+    circuit6 +=G.on(2,0)
+    circuit6 +=G.on(2,1)
+    circuit6 +=G.on(2,[1,0])
+    circuit6 += UN(random_Ui[i],n_qubits) 
+    return circuit6
+def rho_6_d(i,l):
+    circuit66 = Circuit()
+    circuit66 += UN(random_Ui_d[i],n_qubits)
+    circuit66 += G.on(2)
+    circuit66 += G.on(2,0)
+    circuit66 += G.on(2,1)
+    circuit66 += G.on(2,[1,0])
+    circuit66 += UN(random_Ui[i],n_qubits)
+    circuit66 += UN(random_Ul_d[l],n_qubits)
+    return circuit66
+
+def rho_7(i,j):
+    circuit7 = Circuit()
+    circuit7 += UN(random_Ui[i],n_qubits)
+    circuit7 += UN(random_Uj_d[j],n_qubits)
+    circuit7 +=G11.on(2)
+    circuit7 +=G1.on(2,0)
+    circuit7 +=G1.on(2,1)
+    circuit7 +=G11.on(2,[1,0])
+    circuit7 += UN(random_Uj[j],n_qubits)
+    return circuit7
+def rho_7_d(i,j):
+    circuit77 = Circuit()
+    circuit77 += UN(random_Uj_d[j],n_qubits)
+    circuit77 += G1.on(2,[1,0])
+    circuit77 += G11.on(2,1)
+    circuit77 += G11.on(2,0)
+    circuit77 += G1.on(2)  
+    circuit77 += UN(random_Uj[j],n_qubits)
+    circuit77 += UN(random_Ui_d[i],n_qubits)
+    return circuit77
+
+def rho_8(j,k):
+    circuit8 = Circuit()
+    circuit8 += UN(random_Uk[k],n_qubits)
+    circuit8 += UN(random_Uj_d[j],n_qubits)
+    circuit8 +=G11.on(2)
+    circuit8 +=G1.on(2,0)
+    circuit8 +=G1.on(2,1)
+    circuit8 +=G11.on(2,[1,0])
+    circuit8 += UN(random_Uj[j],n_qubits)
+    return circuit8
+def rho_8_d(j,k):
+    circuit88 = Circuit()
+    circuit88 += UN(random_Uj_d[j],n_qubits)
+    circuit88 += G1.on(2,[1,0])
+    circuit88 += G11.on(2,1)
+    circuit88 += G11.on(2,0)
+    circuit88 += G1.on(2)  
+    circuit88 += UN(random_Uj[j],n_qubits)
+    circuit88 += UN(random_Uk_d[k],n_qubits)
+    return circuit88
+
+def rho_9(j,l):
+    circuit9 = Circuit()
+    circuit9 += UN(random_Ul[l],n_qubits)
+    circuit9 += UN(random_Uj_d[j],n_qubits)
+    circuit9 +=G11.on(2)
+    circuit9 +=G1.on(2,0)
+    circuit9 +=G1.on(2,1)
+    circuit9 +=G11.on(2,[1,0])
+    circuit9 += UN(random_Uj[j],n_qubits)  
+    return circuit9
+def rho_9_d(j,l):
+    circuit99 = Circuit()
+    circuit99 += UN(random_Uj_d[j],n_qubits)
+    circuit99 += G1.on(2,[1,0])
+    circuit99 += G11.on(2,1)
+    circuit99 += G11.on(2,0)
+    circuit99 += G1.on(2)  
+    circuit99 += UN(random_Uj[j],n_qubits)
+    circuit99 += UN(random_Ul_d[l],n_qubits)
+    return circuit99
+
+def rho_10(i,k):
+    circuit10 = Circuit()
+    circuit10 += UN(random_Ui[i],n_qubits)
+    circuit10 += UN(random_Uk_d[k],n_qubits)
+    circuit10 +=G22.on(2)
+    circuit10 +=G2.on(2,0)
+    circuit10 +=G2.on(2,1)
+    circuit10 +=G22.on(2,[1,0])
+    circuit10 += UN(random_Uk[k],n_qubits)  
+    return circuit10
+def rho_10_d(i,k):
+    circuit1010 = Circuit()
+    circuit1010 += UN(random_Uk_d[k],n_qubits)
+    circuit1010 += G2.on(2,[1,0])
+    circuit1010 += G22.on(2,1)
+    circuit1010 += G22.on(2,0)
+    circuit1010 += G2.on(2)  
+    circuit1010 += UN(random_Uk[k],n_qubits)
+    circuit1010 += UN(random_Ui_d[i],n_qubits)
+    return circuit1010
+
+def rho_11(j,k):
+    circuit11 = Circuit()
+    circuit11 += UN(random_Uj[j],n_qubits)
+    circuit11 += UN(random_Uk_d[k],n_qubits)
+    circuit11 +=G22.on(2)
+    circuit11 +=G2.on(2,0)
+    circuit11 +=G2.on(2,1)
+    circuit11 +=G22.on(2,[1,0])
+    circuit11 += UN(random_Uk[k],n_qubits)  
+    return circuit11
+def rho_11_d(j,k):
+    circuit1111 = Circuit()
+    circuit1111 += UN(random_Uk_d[k],n_qubits)
+    circuit1111 += G2.on(2,[1,0])
+    circuit1111 += G22.on(2,1)
+    circuit1111 += G22.on(2,0)
+    circuit1111 += G2.on(2)  
+    circuit1111 += UN(random_Uk[k],n_qubits)
+    circuit1111 += UN(random_Uj_d[j],n_qubits)
+    return circuit1111
+
+def rho_12(k,l):
+    circuit12 = Circuit()
+    circuit12 += UN(random_Ul[l],n_qubits)
+    circuit12 += UN(random_Uk_d[k],n_qubits)
+    circuit12 +=G22.on(2)
+    circuit12 +=G2.on(2,0)
+    circuit12 +=G2.on(2,1)
+    circuit12 +=G22.on(2,[1,0])
+    circuit12 += UN(random_Uk[k],n_qubits)  
+    return circuit12
+def rho_12_d(k,l):
+    circuit1212 = Circuit()
+    circuit1212 += UN(random_Uk_d[k],n_qubits)
+    circuit1212 += G2.on(2,[1,0])
+    circuit1212 += G22.on(2,1)
+    circuit1212 += G22.on(2,0)
+    circuit1212 += G2.on(2)  
+    circuit1212 += UN(random_Uk[k],n_qubits)
+    circuit1212 += UN(random_Ul_d[l],n_qubits)
+    return circuit1212
+
+def rho_13(i,l):
+    circuit13 = Circuit()
+    circuit13 += UN(random_Ui[i],n_qubits)
+    circuit13 += UN(random_Ul_d[l],n_qubits)
+    circuit13 +=G33.on(2)
+    circuit13 +=G3.on(2,0)
+    circuit13 +=G3.on(2,1)
+    circuit13 +=G33.on(2,[1,0])
+    circuit13 += UN(random_Ul[l],n_qubits)  
+    return circuit13
+def rho_13_d(i,l):
+    circuit1313 = Circuit()
+    circuit1313 += UN(random_Ul_d[l],n_qubits)
+    circuit1313 += G3.on(2,[1,0])
+    circuit1313 += G33.on(2,1)
+    circuit1313 += G33.on(2,0)
+    circuit1313 += G3_.on(2)  
+    circuit1313 += UN(random_Ul[l],n_qubits)
+    circuit1313 += UN(random_Ui_d[i],n_qubits)
+    return circuit1313
+
+def rho_14(j,l):
+    circuit14 = Circuit()
+    circuit14 += UN(random_Uj[j],n_qubits)
+    circuit14 += UN(random_Ul_d[l],n_qubits)
+    circuit14 +=G33.on(2)
+    circuit14 +=G3.on(2,0)
+    circuit14 +=G3.on(2,1)
+    circuit14 +=G33.on(2,[1,0])
+    circuit14 += UN(random_Ul[l],n_qubits)  
+    return circuit14
+def rho_14_d(j,l):
+    circuit1414 = Circuit()
+    circuit1414 += UN(random_Ul_d[l],n_qubits)
+    circuit1414 += G3.on(2,[1,0])
+    circuit1414 += G33.on(2,1)
+    circuit1414 += G33.on(2,0)
+    circuit1414 += G3.on(2)  
+    circuit1414 += UN(random_Ul[l],n_qubits)
+    circuit1414 += UN(random_Uj_d[j],n_qubits)
+    return circuit1414
+
+def rho_15(k,l):
+    circuit15 = Circuit()
+    circuit15 += UN(random_Uk[k],n_qubits)
+    circuit15 += UN(random_Ul_d[l],n_qubits)
+    circuit15 +=G33.on(2)
+    circuit15 +=G3.on(2,0)
+    circuit15 +=G3.on(2,1)
+    circuit15 +=G33.on(2,[1,0])
+    circuit15 += UN(random_Ul[l],n_qubits)  
+    return circuit15
+def rho_15_d(k,l):
+    circuit1515 = Circuit()
+    circuit1515 += UN(random_Ul_d[l],n_qubits)
+    circuit1515 += G3.on(2,[1,0])
+    circuit1515 += G33.on(2,1)
+    circuit1515 += G33.on(2,0)
+    circuit1515 += G3.on(2)  
+    circuit1515 += UN(random_Ul[l],n_qubits)
+    circuit1515 += UN(random_Uk_d[k],n_qubits)
+    return circuit1515
+
+    
+def g_ig_jg_k(i,j,k):
+    
+    circuitg = Circuit()
+    circuitg += UN(random_Ui_d[i],n_qubits)
+    circuitg +=G.on(2)
+    circuitg +=G.on(2,0)
+    circuitg +=G.on(2,1)
+    circuitg +=G.on(2,[1,0])
+    circuitg += UN(random_Ui[i],n_qubits)#Gi
+            
+    circuitg += UN(random_Uj_d[j],n_qubits)
+    circuitg +=G.on(2)
+    circuitg +=G.on(2,0)
+    circuitg +=G.on(2,1)
+    circuitg +=G.on(2,[1,0])
+    circuitg += UN(random_Uj[j],n_qubits)#Gj
+    
+    circuitg += UN(random_Uk_d[k],n_qubits)
+    circuitg +=G.on(2)
+    circuitg +=G.on(2,0)
+    circuitg +=G.on(2,1)
+    circuitg +=G.on(2,[1,0])
+    circuitg += UN(random_Uk[k],n_qubits)#Gk
+    return circuitg
+    
+
+qiyi=0
+zg=0
+
+sum=0
+nub=0
+traces=[]
+for i in range (0,4):
+    for j in range (0,4):
+        for k in range(0,4):
+            for l in range(0,4):
+                if l != i and l != j and l != k:
+                    break
+            
+            a=i
+            b=j 
+            c=k
+            d=l
+            
+            rho_all = [rho_0(a),rho_1(b),rho_2(c),rho_3(d),rho_4(a,b),rho_5(a,c),rho_6(a,d),rho_7(a,b),rho_8(b,c),rho_9(b,d),rho_10(a,c),rho_11(b,c),rho_12(c,d),rho_13(a,d),rho_14(b,d),rho_15(c,d)]
+            rho_all_d=[rho_0(a),rho_1(b),rho_2(c),rho_3(d),rho_4(a,b),rho_5(a,c),rho_6(a,d),rho_7(a,b),rho_8(b,c),rho_9(b,d),rho_10(a,c),rho_11(b,c),rho_12(c,d),rho_13(a,d),rho_14(b,d),rho_15(c,d)]
+            
+            #bbbbb=[]
+            ptm_array=np.zeros([16,16])
+            g_array=np.zeros([16,16])
+            
+        
+            for m in range (0,16):
+                for n in range (0,16):
+                    G_0=[i,j,k,l]
+                    rho_0ij=[m,n]
+                    
+                    
+                    circuit = Circuit()
+            
+                    circuit += rho_all[n]
+                    circuit += g_ig_jg_k(a,b,c)
+                    circuit += rho_all_d[m]
+                     
+                    
+                    encoder = Circuit()
+                    encoder += UN(I,n_qubits)
+                    encoder += rho_all[n]
+                    encoder += rho_all_d[m]
+  
+                    sim = Simulator('projectq',n_qubits)  
+                    sim       
+                    sim.apply_circuit(circuit)
+                     
+    
+                    sim1 = Simulator('projectq', n_qubits)  
+                    sim1
+                    sim1.apply_circuit(encoder)
+                    
+                    
+                    ptm_array[m,n]=(sim.get_qs()[0])*(sim.get_qs()[0]).conjugate()
+                    
+                    g_array[m,n]=(sim1.get_qs()[0])*(sim1.get_qs()[0]).conjugate()
+                           
+                    nub = nub + 1
+                            
+                    
+                    det = np.linalg.det(g_array)
+
+                    
+                    
+
+                    #result1=sim1.get_qs(True)
+                    
+                    #result1 =sim1.sampling(encoder,shots=1000)
+                    #try:
+                        #res1=result1.data['000']
+                    #except KeyError:
+                        #res1=0
+            print("i=",i,"j=",j,"k=",k,"l=",l)
+                    #print('rho_0ij=',rho_0ij)
+            #print(circuit)
+            #display("PTM矩阵为",ptm_array)
+            if det == 0:
+                
+                print("The g_array is a singular matrix")
+                #display("The singular matrix is",g_array)
+                trace =0
+                print("The trace of the PTM_array is",trace)
+                qiyi=qiyi+1
+                print("The number of singular ones is：",qiyi)
+            else:
+                #display("The g_array is",g_array)
+                print("The g_array is not a singular matrix")
+        
+                g_array_inv=np.linalg.inv(g_array)
+                #display("The inverse matrix of g is:",g_array_inv)
+                                          # Compute the matrix product     
+                times=np.dot(g_array_inv,ptm_array)
+                a,b = np.linalg.eig(times)
+                #print(a)
+                #display("The product is",times)
+                                          # Calculate the trace of the matrix
+                trace = np.trace(times)
+                print("The trace of the product matrix is:",trace)
+            zg=zg+1
+            print("The total count is：",zg)
+            sum+=trace
+            print("sum",sum)
+            traces.append(trace)
+with open('3G16rho.txt', 'w') as f:
+    for loop in range (0,64):
+            #print(traces[loop])
+        f.write(str(traces[loop]) + '\n')
+              
+           
+print(nub)         

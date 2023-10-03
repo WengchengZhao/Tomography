@@ -358,13 +358,7 @@ for i in range (0,4):
                 
                 g_array[m,n]=(sim1.get_qs()[0])*(sim1.get_qs()[0]).conjugate()
                         
-                
-                        
-               
                 det = np.linalg.det(g_array)
-
-                
-                
 
                 #result1=sim1.get_qs(True)
                 

@@ -3,11 +3,11 @@ from mindquantum.core.circuit import UN
 from mindquantum.simulator import Simulator
 import random 
 import numpy as np   
-import math                          # 导入numpy库并简写为np
-from mindquantum.simulator import Simulator    # 从mindquantum.simulator中导入Simulator类
+import math                        
+from mindquantum.simulator import Simulator   
 from mindquantum.core.gates import X,Y,Z, H, RY,Measure,I
 from mindquantum import *
-from mindquantum.core.operators import Hamiltonian    # 引入哈密顿量定义模块
+from mindquantum.core.operators import Hamiltonian    
 from mindquantum.core.operators import QubitOperator 
 from mindquantum.core.gates.channel import PauliChannel, BitFlipChannel, PhaseFlipChannel, BitPhaseFlipChannel, DepolarizingChannel
 from mindquantum import Circuit, X
@@ -17,7 +17,7 @@ from mindquantum.core.circuit import Circuit
 G_mat=np.array([[-1,0],[0,1]])
 G_Gate=UnivMathGate('G',G_mat)
 G=G_Gate
- # 自定义量子门
+
 
 
 G1_mat=np.array([[np.cos((0.2)*math.pi)+1j*np.sin((0.2)*math.pi),0],
@@ -153,21 +153,21 @@ n_qubits=3
 
 def rho_0(i):
     circuit0 = Circuit()
-    circuit0 += UN(random_Ui[i],n_qubits)#rho_0
+    circuit0 += UN(random_Ui[i],n_qubits)
     return circuit0
 def rho_0_d(i):
    
     circuit00 = Circuit()
-    circuit00 += UN(random_Ui_d[i],n_qubits)#rho_0
+    circuit00 += UN(random_Ui_d[i],n_qubits)
     return circuit00
 def rho_1(j):
     circuit1 = Circuit()
-    circuit1 += UN(random_Uj[j],n_qubits)#rho_1
+    circuit1 += UN(random_Uj[j],n_qubits)
     return circuit1
 def rho_1_d(j):
    
     circuit11 = Circuit()
-    circuit11 += UN(random_Uj_d[j],n_qubits)#rho_0
+    circuit11 += UN(random_Uj_d[j],n_qubits)
     return circuit11
 
 def rho_2(k):
@@ -176,7 +176,7 @@ def rho_2(k):
     return circuit2
 def rho_2_d(k):
     circuit22 = Circuit()
-    circuit22 += UN(random_Uk_d[k],n_qubits)#rho_0
+    circuit22 += UN(random_Uk_d[k],n_qubits)
     return circuit22
 
 def rho_3(l):
@@ -470,7 +470,7 @@ def g_ig_jg_k(i,j,k,l):
     circuitg +=G.on(2,0)
     circuitg +=G.on(2,1)
     circuitg +=G.on(2,[1,0])
-    circuitg += UN(random_Ul[l],n_qubits)#Gk
+    circuitg += UN(random_Ul[l],n_qubits)#Gl
     return circuitg
     
 
@@ -494,7 +494,7 @@ for i in range (0,5):
                 rho_all = [rho_0(a),rho_1(b),rho_2(c),rho_3(d),rho_4(a,b),rho_5(a,c),rho_6(a,d),rho_7(a,b),rho_8(b,c),rho_9(b,d),rho_10(a,c),rho_11(b,c),rho_12(c,d),rho_13(a,d),rho_14(b,d),rho_15(c,d)]
                 rho_all_d=[rho_0(a),rho_1(b),rho_2(c),rho_3(d),rho_4(a,b),rho_5(a,c),rho_6(a,d),rho_7(a,b),rho_8(b,c),rho_9(b,d),rho_10(a,c),rho_11(b,c),rho_12(c,d),rho_13(a,d),rho_14(b,d),rho_15(c,d)]
                 
-                #bbbbb=[]
+               
                 ptm_array=np.zeros([16,16])
                 g_array=np.zeros([16,16])
                 
@@ -517,12 +517,12 @@ for i in range (0,5):
                         encoder += rho_all[n]
                         encoder += rho_all_d[m]
       
-                        sim = Simulator('projectq',n_qubits)   #声明一个3比特的projectq模拟器sim
-                        sim         #展示模拟器状态  
+                        sim = Simulator('projectq',n_qubits)  
+                        sim           
                         sim.apply_circuit(circuit)
                          
         
-                        sim1 = Simulator('projectq', n_qubits)  #声明一个3比特的projectq模拟器sim1
+                        sim1 = Simulator('projectq', n_qubits) 
                         sim1
                         sim1.apply_circuit(encoder)
                         
@@ -530,13 +530,13 @@ for i in range (0,5):
                         ptm_array[m,n]=(sim.get_qs()[0])*(sim.get_qs()[0]).conjugate()
                         
                         g_array[m,n]=(sim1.get_qs()[0])*(sim1.get_qs()[0]).conjugate()
-                                #bbbbb.append(res)
+                               
                         nub = nub + 1
                                 
-                        # 计算行列式
+                 
                         det = np.linalg.det(g_array)
     
-                        # 判断是否是奇异矩阵
+                       
                         
     
                         #result1=sim1.get_qs(True)
@@ -551,30 +551,29 @@ for i in range (0,5):
                 #print(circuit)
                 #display("PTM矩阵为",ptm_array)
                 if det == 0:
-                        
-                    print("g矩阵是奇异矩阵")
-                    #display("奇异矩阵为",g_array)
-                    trace =0
-                    print("PTM矩阵的迹为",trace)
-                    qiyi=qiyi+1
-                    print("奇异的个数是：",qiyi)
                     
+                    print("The g_array is a singular matrix")
+                    #display("The singular matrix is",g_array)
+                    trace =0
+                    print("The trace of the PTM_array is",trace)
+                    qiyi=qiyi+1
+                    print("The number of singular ones is：",qiyi)
                 else:
-                    #display("g矩阵为",g_array)
-                    print("g矩阵不是奇异矩阵")
+                    #display("The g_array is",g_array)
+                    print("The g_array is not a singular matrix")
             
                     g_array_inv=np.linalg.inv(g_array)
-                    #display("g的逆矩阵为",g_array_inv)
-                                            # 计算矩阵乘积    
+                    #display("The inverse matrix of g is:",g_array_inv)
+                                              # Compute the matrix product     
                     times=np.dot(g_array_inv,ptm_array)
                     a,b = np.linalg.eig(times)
                     #print(a)
-                    #display("乘积为",times)
-                                                # 计算矩阵的迹
+                    #display("The product is",times)
+                                              # Calculate the trace of the matrix
                     trace = np.trace(times)
-                    print("乘积矩阵的迹为",trace)
+                    print("The trace of the product matrix is:",trace)
                 zg=zg+1
-                print("总共的个数是：",zg)
+                print("The total count is：",zg)
                 sum+=trace
                 print("sum",sum)
                 traces.append(trace)

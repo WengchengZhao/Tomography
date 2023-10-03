@@ -1,100 +1,84 @@
-# 读取4G16rho.txt文件中的数据，存储在A张量中
+# Read data from the "4G16rho.txt" file and store it in tensor A
 with open("4G16rho.txt") as f:
     lines = f.readlines()
     A = [[[[float(lines[i*125 + j*25 + k*5 + l]) for l in range(5)] for k in range(5)] for j in range(5)] for i in range(5)]
 
-# 读取4G25rho.txt文件中的数据，存储在B张量中
+# Read data from the "4G25rho.txt" file and store it in tensor B
 with open("4G25rho.txt") as f:
     lines = f.readlines()
-    B =[[[[float(lines[i*125 + j*25 + k*5 + l]) for l in range(5)] for k in range(5)] for j in range(5)] for i in range(5)]
+    B = [[[[float(lines[i*125 + j*25 + k*5 + l]) for l in range(5)] for k in range(5)] for j in range(5)] for i in range(5)]
 
-# 初始化p和n
-p1=0.1
-p2=0.2
-p3=0.3
-p4=0.4
-p5=0
-p = [p1, p2, p3, p4,p5]
+# Initialize p and n
+p1 = 0.1
+p2 = 0.2
+p3 = 0.3
+p4 = 0.4
+p5 = 0
+p = [p1, p2, p3, p4, p5]
 n = 3
-num=0
-ctt=0
-# 初始化T和G_q张量
-T = [[[[0 for _ in range(5)] for _ in range(5)] for _ in range(5)] for _ in range(5)]
-G_q= [[[[0 for _ in range(5)] for _ in range(5)] for _ in range(5)] for _ in range(5)]
+num = 0
+ctt = 0
 
-# 计算 T 张量和 G_q 张量
+# Initialize tensors T and G_q
+T = [[[[0 for _ in range(5)] for _ in range(5)] for _ in range(5)] for _ in range(5)]
+G_q = [[[[0 for _ in range(5)] for _ in range(5)] for _ in range(5)] for _ in range(5)]
+
+# Calculate tensors T and G_q
 for i in range(5):
     for j in range(5):
         for k in range(5):
             for l in range(5):
-#------------------------------------------------------------------------------------------------abcd            
+                # --------------------------------abcd
                 if i != j and i != k and j != k and i != l and j != l and k != l:
                     T[i][j][k][l] = 0.5 * (B[i][j][k][l] - A[i][j][k][l] - 1)
-                    G_q[i][j][k][l] = p[i] * p[j] * p[k] * p[l] * (T[i][j][k][l] + 2**n - 4)  
-                    
-                    
-#------------------------------------------------------------------------------------------------aaaa                   
+                    G_q[i][j][k][l] = p[i] * p[j] * p[k] * p[l] * (T[i][j][k][l] + 2**n - 4)
+                # --------------------------------aaaa
+                elif i == j and j == k and k == l:
+                    G_q[i][j][k][l] = p[i] * p[j] * p[k] * p[l] * 8
+                # --------------------------------以下为3a1b
+                elif i == j and j == k and k != l:  # aaab
+                    G_q[i][j][k][l] = (1/20) * 0.3880276222461873
+                    # 一个数Tr{G^2}
+                elif i == j and j != k and j == l:  # aaba
+                    G_q[i][j][k][l] = (1/20) * 0.3880276222461873
+                    # 一个数Tr{G^2}
+                elif i != j and j == k and k == l:  # abbb
+                    G_q[i][j][k][l] = (1/20) * 0.3880276222461873
+                elif i != j and i == k and k == l:  # abaa
+                    G_q[i][j][k][l] = (1/20) * 0.3880276222461873
+                # --------------------------------abba
+                elif i == l and i != j and j == k:
+                    G_q[i][j][k][l] = p[i] * p[j] * p[k] * p[l] * 8
+                # --------------------------------aabb
+                elif i == j and k == l and j != k:
+                    G_q[i][j][k][l] = p[i] * p[j] * p[k] * p[l] * 8
+                # --------------------------------abcc
+                elif i != j and j != k and k == l and i != k:
+                    G_q[i][j][k][l] = (1/60) * 0.48479999998105683
+                # --------------------------------aabc
+                elif i == j and j != k and j != l and k != l:
+                    G_q[i][j][k][l] = (1/60) * 0.48479999999922224
+                # --------------------------------abbc
+                elif i != l and i != k and l != k and j == k:
+                    G_q[i][j][k][l] = (1/60) * 0.48379998538677127
+                # --------------------------------abab
+                elif i == k and j == l and i != j:
+                    G_q[i][j][k][l] = (1/20) * 0.2507310827824929
+                # --------------------------------abac
+                elif i == k and j != i and l != j and l != k:
+                    G_q[i][j][k][l] = (1/60) * 0.43464189555363797
+                # --------------------------------baca
+                elif i != j and i != k and j == l and i != k:
+                    G_q[i][j][k][l] = (1/60) * 0.4280400621957261
+                # --------------------------------abca
+                elif i == l and j != k and j != l and k != l:
+                    G_q[i][j][k][l] = (1/60) * 0.4837999853873681
 
-                elif i==j and j==k and k==l:
-                    G_q[i][j][k][l] = p[i] * p[j] * p[k] * p[l] * 8 
-                    
-#------------------------------------------------------------------------------------------------以下为3a1b                     
-                elif i==j and j==k and k!=l:   #aaab
-                    G_q[i][j][k][l] = (1/20)*0.3880276222461873
-                    
-                    # 一个数Tr{G^2}
-                elif i==j and j!=k and j==l:   #aaba
-                    G_q[i][j][k][l] = (1/20)*0.3880276222461873
-                    
-                    # 一个数Tr{G^2}
-                elif i!=j and j==k and k==l:   #abbb
-                    G_q[i][j][k][l] = (1/20)*0.3880276222461873
-                    
-                elif i!=j and i==k and k == l: #abaa
-                    G_q[i][j][k][l] = (1/20)*0.3880276222461873
-#------------------------------------------------------------------------------------------------abba                    
-                elif i==l and i!=j and j== k:
-                    G_q[i][j][k][l] = p[i] * p[j] * p[k] * p[l] * 8
-                    
-#------------------------------------------------------------------------------------------------aabb                    
-                elif i==j and k==l and j!=k:
-                    G_q[i][j][k][l] = p[i] * p[j] * p[k] * p[l] * 8
-                   
-#------------------------------------------------------------------------------------------------abcc 
-                elif i!=j and j!=k and k==l and i!=k:
-                    G_q[i][j][k][l] = (1/60)* 0.48479999998105683
-                   
-#------------------------------------------------------------------------------------------------aabc                    
-                elif i==j and j!=k and j!=l and k!=l:
-                    G_q[i][j][k][l] = (1/60)* 0.48479999999922224
-                    
-#------------------------------------------------------------------------------------------------abbc
-                elif i!=l and i!=k and l!=k and j==k:
-                    G_q[i][j][k][l] = (1/60)*0.48379998538677127
-                    
-#------------------------------------------------------------------------------------------------abab                    
-                elif i==k and j==l and i!=j :
-                    G_q[i][j][k][l] = (1/20)*0.2507310827824929
-                
-#------------------------------------------------------------------------------------------------abac        
-                elif i==k and j!=i and l!=j and l!=k:
-                    #G_q[i][j][k][l] = (1/60)*0.4847999999992222
-                    G_q[i][j][k][l] = (1/60)*0.43464189555363797
-#------------------------------------------------------------------------------------------------baca                    
-                elif i!=j and i!=k and j==l and i!=k:
-                    G_q[i][j][k][l] = (1/60)*0.4280400621957261
-#------------------------------------------------------------------------------------------------abca                   
-                elif i==l and j!=k and j!=l and k!=l :
-                    G_q[i][j][k][l] = (1/60)*0.4837999853873681
-                 
-                num=num+1     
-              
-                    
-                  
-                    
-# 计算总的 G_q
+                num = num + 1
+
+# Calculate the total G_q
 total_G_q = sum(sum(sum(sum(G_q[i][j][k]) for k in range(5)) for j in range(5)) for i in range(5))
 
-print(total_G_q)
+print(total_G_q)  #Tr(\rho^4) can be calculated using this step
 print(num)
-print('ctt',ctt)
+#print('ctt', ctt)
